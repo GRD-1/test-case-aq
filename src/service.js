@@ -1,26 +1,28 @@
 import footprintApi from './footprintApi';
-import goHomeHandler from './home';
+import getHome from './home';
 import { InternalError } from './errors/errors';
 import { INTERNAL_ERROR_CODES } from './errors/error-codes';
 
-export async function getHomePage() {
-  return goHomeHandler();
-}
+export default {
+  async getHomePage() {
+    return getHome();
+  },
 
-export async function getForCountry(args) {
-  const { countryCode, year, pageFrom, pageTo } = args;
-  const countries = await footprintApi.getCountries();
-  const country = countries.find((item) => Number(item.countryCode) === countryCode);
+  async getForCountry(args) {
+    const { countryCode, year, pageFrom, pageTo } = args;
+    const countries = await footprintApi.getCountries();
+    const country = countries.find((item) => Number(item.countryCode) === countryCode);
 
-  if (!country) {
-    throw new InternalError('Invalid country code!', INTERNAL_ERROR_CODES.BAD_REQUEST);
-  }
+    if (!country) {
+      throw new InternalError('Invalid country code!', INTERNAL_ERROR_CODES.BAD_REQUEST);
+    }
 
-  const countryEmission = await footprintApi.getDataForCountry(countryCode);
-  const isThereConditions = year || pageFrom || pageTo;
+    const countryEmission = await footprintApi.getDataForCountry(countryCode);
+    const isThereConditions = year || pageFrom || pageTo;
 
-  return isThereConditions ? processData(countryEmission, args) : countryEmission;
-}
+    return isThereConditions ? processData(countryEmission, args) : countryEmission;
+  },
+};
 
 function processData(data, args) {
   const { year, pageFrom, pageTo, recordsPerPage } = args;

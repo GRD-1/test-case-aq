@@ -3,8 +3,10 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import router from './router';
 import exceptionFilter from './middleware/exception-filter';
+import { validateEnvVars } from './utils/validate-env';
 
 dotenv.config();
+validateEnvVars();
 
 const app = express();
 const urlencodedParser = express.urlencoded({ extended: false });

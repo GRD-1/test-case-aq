@@ -1,6 +1,6 @@
 import footprintApi from './footprintApi';
 
-export default async function goHomeHandler() {
+export default async function getHome() {
   const countries = await footprintApi.getCountries();
   const country = await footprintApi.getDataForCountry(229);
 
