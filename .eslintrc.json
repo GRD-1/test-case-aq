@@ -1,0 +1,59 @@
+{
+  "plugins": [
+    "import"
+  ],
+  "extends": [
+    "plugin:import/recommended",
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "env": {
+    "es2020": true,
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    // broken rules
+    "arrow-parens": "off",                                                                            // conflicting with Prettier
+    "object-curly-newline": "off",                                                                    // conflicting with Prettier
+    "no-mixed-operators": "off",                                                                      // conflicting with Prettier
+    "function-paren-newline": "off",                                                                  // conflicting with Prettier
+    "space-before-function-paren": 0,                                                                 // conflicting with Prettier
+
+    // just the rules
+    "no-plusplus": "off",
+    "max-len": ["error", 120, 2, { "ignoreUrls": true }],
+    "no-console": "off",
+    "no-alert": "error",
+    "spaced-comment": "off",
+    "no-param-reassign": "off",
+    "lines-between-class-members": "off",
+    "no-trailing-spaces": "off",
+    "prefer-destructuring": "off",
+    "no-await-in-loop": "off",
+    "max-classes-per-file": "off",
+    "no-use-before-define": "off",
+    "newline-per-chained-call": "off",
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "*", "next": "return" }
+    ],
+
+    // import/export (https://github.com/import-js/eslint-plugin-import/tree/main/docs/rules)
+    "import/extensions": "off",
+    "import/newline-after-import": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
+
+    // eslint-plugin-prettier rules
+    "prettier/prettier": ["error", { "printWidth": 120, "trailingComma": "all" }]
+  }
+}

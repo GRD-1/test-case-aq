@@ -1,0 +1,10 @@
+.idea/
+node_modules/
+git
+.github
+package-lock.json
+.prettierrc.json
+.prettierignore
+.eslintrc.json
+.eslintignore
+src/config/config.schema.ts
