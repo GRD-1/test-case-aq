@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import router from './router';
-import exceptionFilter from './errors/exception-filter';
+import exceptionFilter from './middleware/exception-filter';
 
 dotenv.config();
 

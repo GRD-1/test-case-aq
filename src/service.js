@@ -8,7 +8,7 @@ export async function getHomePage() {
 }
 
 export async function getForCountry(args) {
-  const { countryCode, pageFrom, pageTo, recordsPerPage, year } = args;
+  const { countryCode, year, pageFrom, pageTo } = args;
   const countries = await footprintApi.getCountries();
   const country = countries.find((item) => Number(item.countryCode) === countryCode);
 
@@ -16,9 +16,25 @@ export async function getForCountry(args) {
     throw new InternalError('Invalid country code!', INTERNAL_ERROR_CODES.BAD_REQUEST);
   }
 
-  return footprintApi.getDataForCountry(country.countryCode);
+  const countryEmission = await footprintApi.getDataForCountry(countryCode);
+  const isThereConditions = year || pageFrom || pageTo;
+
+  return isThereConditions ? processData(countryEmission, args) : countryEmission;
 }
 
-export async function getForAllCountries() {
-  return 'getForAll';
+function processData(data, args) {
+  const { year, pageFrom, pageTo, recordsPerPage } = args;
+  let processedData;
+
+  if (year) {
+    processedData = [data.find((item) => Number(item.year) === year)];
+  }
+  if (pageFrom || pageTo) {
+    const firstRecord = pageFrom ? pageFrom * recordsPerPage : 0;
+    const lastRecord = pageTo ? pageTo * recordsPerPage : data.length - 1;
+
+    processedData = data.slice(firstRecord, lastRecord);
+  }
+
+  return processedData;
 }

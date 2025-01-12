@@ -1,5 +1,5 @@
-import { INTERNAL_ERROR_CODES, INTERNAL_ERROR_TO_HTTP } from './error-codes';
-import { InternalError } from './errors';
+import { INTERNAL_ERROR_CODES, INTERNAL_ERROR_TO_HTTP } from '../errors/error-codes';
+import { InternalError } from '../errors/errors';
 
 const exceptionFilter = (err, req, res, next) => {
   let statusCode = 500;
