@@ -14,7 +14,9 @@ export default {
     let lastProcessedIndex = -1;
 
     let countries = await footprintApi.getCountries();
-    countries = countries.slice(0, 4);
+    const fakeCountryIndex = countries.findLastIndex((item) => item.countryName === 'All');
+    countries.splice(fakeCountryIndex, 1);
+    countries = countries.slice(0, 10);
 
     const fetchingTasks = countries.map((country) => {
       return {

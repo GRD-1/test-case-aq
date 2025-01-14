@@ -7,25 +7,24 @@ class TaskQueue {
     this.results = [];
     this.limit = limit;
     this.interval = interval;
+    this.errorNumber = 0;
   }
 
   async _worker(task) {
     try {
-      console.log(`Processing task: ${task.id}`);
       const result = await task.execute();
-      console.log(`Task ${task.id} completed.`);
       this.results.push({ id: task.id, status: 'success', result });
     } catch (error) {
-      console.error(`Error in task ${task.id}:`, error.message);
+      this.errorNumber++;
       this.failedTasks.push(task);
       throw error;
     }
   }
 
   async addTasks(tasks) {
-    try {
-      let count = 0;
-      for (let task of tasks) {
+    let count = 0;
+    for (let task of tasks) {
+      try {
         if (count >= this.limit) {
           await this.wait();
           this.limit = count - this.failedTasks.length;
@@ -35,9 +34,10 @@ class TaskQueue {
         }
         void this.queue.push(task);
         count++;
+      } catch (error) {
+        this.errorNumber++;
+        this.failedTasks.push(task);
       }
-    } catch (error) {
-      console.log('Failed to add task due to an error.');
     }
   }
 
