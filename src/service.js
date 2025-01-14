@@ -1,6 +1,6 @@
 import footprintApi from './footprintApi';
 import getHome from './home';
-import taskQueue from './utils/task-queue.js';
+import { fetchingQueue, processingQueue } from './utils/task-queue.js';
 
 export default {
   async getHomePage() {
@@ -8,16 +8,18 @@ export default {
   },
 
   async getEmission(args) {
-    const { year, pageFrom, pageTo } = args;
-    let results = [];
+    const { year } = args;
+    let fetchingResults = [];
+    let processingResults = [];
+    let lastProcessedIndex = -1;
 
-    const countries = await footprintApi.getCountries();
+    let countries = await footprintApi.getCountries();
+    countries = countries.slice(0, 4);
 
-    const tasks = countries.map((country) => {
+    const fetchingTasks = countries.map((country) => {
       return {
         id: country.countryCode,
         execute: async () => {
-          console.log(`Fetching data for country: ${country.countryCode}`);
           const countryEmission = await footprintApi.getDataForCountry(country.countryCode);
 
           return countryEmission.find((item) => item.year === year);
@@ -25,37 +27,54 @@ export default {
       };
     });
 
-    await taskQueue.addTasks(tasks);
+    await fetchingQueue.addTasks(fetchingTasks);
 
     await new Promise((resolve) => {
       const checkQueue = setInterval(() => {
-        results = taskQueue.getResults();
-        if (taskQueue.queue.idle() && results.length === tasks.length) {
+        fetchingResults = fetchingQueue.getResults();
+        processingResults = processingQueue.getResults();
+
+        if (lastProcessedIndex < fetchingResults.length - 1) {
+          processData(fetchingResults, lastProcessedIndex, countries);
+          lastProcessedIndex = fetchingResults.length - 1;
+        }
+
+        const isFetchingCompleted = fetchingResults.length === fetchingTasks.length;
+        const isProcessingCompleted = processingResults.length === fetchingTasks.length;
+
+        if (isProcessingCompleted && isFetchingCompleted) {
           clearInterval(checkQueue);
           resolve();
         }
       }, 100);
     });
 
-    const isThereConditions = pageFrom || pageTo;
-
-    return isThereConditions ? processData(results, args) : results;
+    return processingResults;
   },
 };
 
-function processData(data, args) {
-  const { year, pageFrom, pageTo, recordsPerPage } = args;
-  let processedData;
+async function processData(fetchingResults, lastProcessedIndex, countries) {
+  const processingResults = processingQueue.getResults();
+  if (processingResults.length < fetchingResults.length) {
+    const startIndex = lastProcessedIndex + 1;
+    const data = fetchingResults.slice(startIndex);
+    const processingTasks = data.map((item) => {
+      let countryData = item.result;
+      if (!countryData) {
+        countryData = countries.find((country) => country.countryCode === item.id);
+      }
 
-  if (year) {
-    processedData = [data.find((item) => Number(item.year) === year)];
+      return {
+        id: item.countryCode,
+        execute: async () => {
+          return {
+            ...countryData,
+            carbon: countryData.carbon || null,
+          };
+        },
+      };
+    });
+
+    await processingQueue.addTasks(processingTasks);
   }
-  if (pageFrom || pageTo) {
-    const firstRecord = pageFrom ? pageFrom * recordsPerPage : 0;
-    const lastRecord = pageTo ? pageTo * recordsPerPage : data.length - 1;
-
-    processedData = data.slice(firstRecord, lastRecord);
-  }
-
-  return processedData;
 }

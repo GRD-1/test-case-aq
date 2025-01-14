@@ -1,12 +1,12 @@
 import fastq from 'fastq';
 
 class TaskQueue {
-  constructor(concurrency = 1) {
+  constructor(concurrency = 1, limit, interval) {
     this.queue = fastq.promise(this, this._worker, concurrency);
     this.failedTasks = [];
     this.results = [];
-    this.limit = 10;
-    this.interval = 1000;
+    this.limit = limit;
+    this.interval = interval;
   }
 
   async _worker(task) {
@@ -51,5 +51,5 @@ class TaskQueue {
   }
 }
 
-const taskQueueInstance = new TaskQueue();
-export default taskQueueInstance;
+export const fetchingQueue = new TaskQueue(1, 10, 1000);
+export const processingQueue = new TaskQueue(100, 100, 1000);

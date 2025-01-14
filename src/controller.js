@@ -1,6 +1,6 @@
 import Service from './service';
 import GetEmissionSchema from './dto/get-emission.schema';
-import GetEmissionRespSchema from './dto/get-emission-response.schema';
+import GetEmissionRespTransform from './dto/get-emission-response.schema';
 import validateDTO from './dto/validate-dto';
 
 export default {
@@ -18,11 +18,9 @@ export default {
     try {
       const dto = validateDTO(GetEmissionSchema, { ...req.params, ...req.query });
       const data = await Service.getEmission(dto);
-      // const transformedData = validateDTO(GetEmissionRespSchema, data);
-      //
-      // res.status(200).send(transformedData);
+      const { value: transformedData } = GetEmissionRespTransform(data);
 
-      res.status(200).send(data);
+      res.status(200).send(transformedData);
     } catch (e) {
       next(e);
     }
