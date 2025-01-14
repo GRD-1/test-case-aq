@@ -3,8 +3,7 @@ import Joi from 'joi';
 const EnvSchema = Joi.object({
   FOOTPRINT_API_KEY: Joi.string().required(),
   FOOTPRINT_USERNAME: Joi.string().required(),
-  FOOTPRINT_RATE_LIMIT: Joi.number().default(60),
-  FOOTPRINT_REPEATS: Joi.number().default(5),
+  FOOTPRINT_RATE_LIMIT: Joi.number().default(100),
   APP_PORT: Joi.number().port().default(5000),
 }).unknown();
 

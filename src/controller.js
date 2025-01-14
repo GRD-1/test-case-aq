@@ -1,6 +1,6 @@
 import Service from './service';
-import GetForCountrySchema from './dto/get-for-country.schema';
-import GetForCountryRespSchema from './dto/get-for-country-response.schema';
+import GetEmissionSchema from './dto/get-emission.schema';
+import GetEmissionRespSchema from './dto/get-emission-response.schema';
 import validateDTO from './dto/validate-dto';
 
 export default {
@@ -14,13 +14,15 @@ export default {
     }
   },
 
-  async getEmissionForCountry(req, res, next) {
+  async getEmission(req, res, next) {
     try {
-      const dto = validateDTO(GetForCountrySchema, { ...req.params, ...req.query });
-      const data = await Service.getForCountry(dto);
-      const transformedData = validateDTO(GetForCountryRespSchema, data);
+      const dto = validateDTO(GetEmissionSchema, { ...req.params, ...req.query });
+      const data = await Service.getEmission(dto);
+      // const transformedData = validateDTO(GetEmissionRespSchema, data);
+      //
+      // res.status(200).send(transformedData);
 
-      res.status(200).send(transformedData);
+      res.status(200).send(data);
     } catch (e) {
       next(e);
     }

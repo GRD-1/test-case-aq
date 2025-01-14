@@ -8,6 +8,6 @@ const SCHEMA = Joi.object({
   score: Joi.string(),
 }).options({ stripUnknown: true });
 
-const GetForCountryRespSchema = Joi.array().items(SCHEMA);
+const GetEmissionRespSchema = Joi.array().items(SCHEMA);
 
-export default GetForCountryRespSchema;
+export default GetEmissionRespSchema;

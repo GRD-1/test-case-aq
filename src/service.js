@@ -1,26 +1,45 @@
 import footprintApi from './footprintApi';
 import getHome from './home';
-import { InternalError } from './errors/errors';
-import { INTERNAL_ERROR_CODES } from './errors/error-codes';
+import taskQueue from './utils/task-queue.js';
 
 export default {
   async getHomePage() {
     return getHome();
   },
 
-  async getForCountry(args) {
-    const { countryCode, year, pageFrom, pageTo } = args;
+  async getEmission(args) {
+    const { year, pageFrom, pageTo } = args;
+    let results = [];
+
     const countries = await footprintApi.getCountries();
-    const country = countries.find((item) => Number(item.countryCode) === countryCode);
 
-    if (!country) {
-      throw new InternalError('Invalid country code!', INTERNAL_ERROR_CODES.BAD_REQUEST);
-    }
+    const tasks = countries.map((country) => {
+      return {
+        id: country.countryCode,
+        execute: async () => {
+          console.log(`Fetching data for country: ${country.countryCode}`);
+          const countryEmission = await footprintApi.getDataForCountry(country.countryCode);
 
-    const countryEmission = await footprintApi.getDataForCountry(countryCode);
-    const isThereConditions = year || pageFrom || pageTo;
+          return countryEmission.find((item) => item.year === year);
+        },
+      };
+    });
 
-    return isThereConditions ? processData(countryEmission, args) : countryEmission;
+    await taskQueue.addTasks(tasks);
+
+    await new Promise((resolve) => {
+      const checkQueue = setInterval(() => {
+        results = taskQueue.getResults();
+        if (taskQueue.queue.idle() && results.length === tasks.length) {
+          clearInterval(checkQueue);
+          resolve();
+        }
+      }, 100);
+    });
+
+    const isThereConditions = pageFrom || pageTo;
+
+    return isThereConditions ? processData(results, args) : results;
   },
 };
 
