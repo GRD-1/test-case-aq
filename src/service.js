@@ -1,8 +1,9 @@
 import footprintApi from './footprintApi';
 import getHome from './home';
-import { fetchingQueue, processingQueue } from './utils/task-queue.js';
 import { InternalError } from './errors/errors';
 import { INTERNAL_ERROR_CODES } from './errors/error-codes';
+import Provider from './utils/provider';
+import TaskQueue from './utils/task-queue';
 
 export default {
   async getHomePage() {
@@ -10,18 +11,24 @@ export default {
   },
 
   async getEmission(args) {
-    return Promise.race([setCustomTimeout(fetchingQueue, processingQueue), getEmissionData(args)]);
+    const fetchingQueue = Provider.getService(TaskQueue, [1, 10, 1000]);
+    const processingQueue = Provider.getService(TaskQueue, [100, 100, 1000]);
+
+    return Promise.race([
+      setCustomTimeout(fetchingQueue, processingQueue),
+      getEmissionData(args, fetchingQueue, processingQueue),
+    ]);
   },
 };
 
-async function getEmissionData(args) {
+async function getEmissionData(args, fetchingQueue, processingQueue) {
   const { year } = args;
   let fetchingResults = [];
   let processingResults = [];
   let lastProcessedIndex = -1;
 
   let countries = await footprintApi.getCountries();
-  // countries = countries.slice(0, 20);
+  countries = countries.slice(0, 20);
 
   const fetchingTasks = countries.map((country) => {
     return {
@@ -49,7 +56,7 @@ async function getEmissionData(args) {
       }
 
       if (lastProcessedIndex < fetchingResults.length - 1) {
-        processData(fetchingResults, lastProcessedIndex, countries);
+        processData(processingQueue, fetchingResults, lastProcessedIndex, countries);
         lastProcessedIndex = fetchingResults.length - 1;
       }
 
@@ -66,7 +73,7 @@ async function getEmissionData(args) {
   return processingResults;
 }
 
-async function processData(fetchingResults, lastProcessedIndex, countries) {
+async function processData(processingQueue, fetchingResults, lastProcessedIndex, countries) {
   const processingResults = processingQueue.getResults();
   if (processingResults.length < fetchingResults.length) {
     const startIndex = lastProcessedIndex + 1;

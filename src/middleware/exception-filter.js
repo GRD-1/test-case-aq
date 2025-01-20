@@ -2,6 +2,7 @@ import { INTERNAL_ERROR_CODES, INTERNAL_ERROR_TO_HTTP } from '../errors/error-co
 import { InternalError } from '../errors/errors';
 
 const exceptionFilter = (err, req, res, next) => {
+  console.log(err);
   let statusCode = 500;
   let message = 'Internal server error';
   let isTimeout;

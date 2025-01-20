@@ -1,13 +1,12 @@
 import fastq from 'fastq';
 
-class TaskQueue {
+export default class TaskQueue {
   constructor(concurrency = 1, limit, interval) {
     this.queue = fastq.promise(this, this._worker, concurrency);
     this.failedTasks = [];
     this.results = [];
     this.limit = limit;
     this.interval = interval;
-    this.errorNumber = 0;
   }
 
   async _worker(task) {
@@ -15,7 +14,6 @@ class TaskQueue {
       const result = await task.execute();
       this.results.push({ id: task.id, status: 'success', result });
     } catch (error) {
-      this.errorNumber++;
       this.failedTasks.push(task);
       throw error;
     }
@@ -33,7 +31,6 @@ class TaskQueue {
         void this.queue.push(task);
         count++;
       } catch (error) {
-        this.errorNumber++;
         this.failedTasks.push(task);
       }
     }
@@ -55,6 +52,3 @@ class TaskQueue {
     }
   }
 }
-
-export const fetchingQueue = new TaskQueue(1, 10, 1000);
-export const processingQueue = new TaskQueue(100, 100, 1000);
