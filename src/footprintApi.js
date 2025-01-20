@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { InternalError } from './errors/errors';
-import { INTERNAL_ERROR_CODES } from './errors/error-codes';
+import { INTERNAL_ERRORS } from './errors/error-codes';
 
 export default {
   async get(apiUrl) {
@@ -12,7 +12,7 @@ export default {
         },
       });
     } catch (e) {
-      throw new InternalError(e.message, INTERNAL_ERROR_CODES.SERVICE_UNAVAILABLE);
+      throw new InternalError({ ...INTERNAL_ERRORS.SERVICE_UNAVAILABLE, cause: e.message });
     }
   },
 

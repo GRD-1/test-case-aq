@@ -1,7 +1,7 @@
 import footprintApi from './footprintApi';
 import getHome from './home';
 import { InternalError } from './errors/errors';
-import { INTERNAL_ERROR_CODES } from './errors/error-codes';
+import { INTERNAL_ERRORS } from './errors/error-codes';
 import Provider from './utils/provider';
 import TaskQueue from './utils/task-queue';
 
@@ -100,18 +100,11 @@ async function processData(processingQueue, fetchingResults, lastProcessedIndex,
 }
 
 async function setCustomTimeout(fetchingQueue, processingQueue) {
-  const timeoutMs = process.env.GLOBAL_TIMEOUT;
-
   return new Promise((_, reject) => {
     setTimeout(() => {
       fetchingQueue.queue.kill();
       processingQueue.queue.kill();
-      reject(
-        new InternalError(
-          `Request timed out after ${timeoutMs} ms`,
-          INTERNAL_ERROR_CODES.TIMEOUT_EXPIRED,
-        ),
-      );
-    }, timeoutMs);
+      reject(new InternalError(INTERNAL_ERRORS.TIMEOUT_EXPIRED));
+    }, process.env.GLOBAL_TIMEOUT);
   });
 }

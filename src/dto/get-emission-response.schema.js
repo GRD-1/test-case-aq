@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { InternalError } from '../errors/errors';
-import { INTERNAL_ERROR_CODES } from '../errors/error-codes';
+import { INTERNAL_ERRORS } from '../errors/error-codes';
 
 const schema = Joi.object().pattern(
   Joi.string(),
@@ -30,7 +30,7 @@ function GetEmissionRespTransform(data) {
 
   if (error) {
     const msg = `Invalid response: ${error.message}`;
-    throw new InternalError(msg, INTERNAL_ERROR_CODES.INVALID_RESPONSE);
+    throw new InternalError({ ...INTERNAL_ERRORS.INVALID_RESPONSE, cause: msg });
   }
 
   return { value: transformed, error: error };

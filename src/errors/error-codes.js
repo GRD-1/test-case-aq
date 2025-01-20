@@ -1,89 +1,145 @@
-export const INTERNAL_ERROR_CODES = {
-  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
-  UNAUTHORIZED: 'UNAUTHORIZED',
-  FORBIDDEN: 'FORBIDDEN',
-  INVALID_DATA: 'INVALID_DATA',
-  RECORD_NOT_FOUND: 'RECORD_NOT_FOUND',
-  UNIQUE_VIOLATION: 'UNIQUE_VIOLATION',
-  BAD_REQUEST: 'BAD_REQUEST',
-  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
-  ENV_VALIDATION_ERROR: 'ENV_VALIDATION_ERROR',
-  UNCONFIRMED_EMAIL: 'UNCONFIRMED_EMAIL',
-  SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
-  TO_MANY_REQUESTS: 'TO_MANY_REQUESTS',
-  INVALID_RESPONSE: 'INVALID_RESPONSE',
-  TIMEOUT_EXPIRED: 'TIMEOUT_EXPIRED',
+export const INTERNAL_ERRORS = {
+  INTERNAL_SERVER_ERROR: {
+    statusCode: 'INTERNAL_SERVER_ERROR',
+    message: 'Internal server error',
+    cause: '',
+  },
+  UNAUTHORIZED: {
+    statusCode: 'UNAUTHORIZED',
+    message: 'Authorization is failed',
+    cause: '',
+  },
+  FORBIDDEN: {
+    statusCode: 'FORBIDDEN',
+    message: 'Access denied',
+    cause: '',
+  },
+  UNPROCESSABLE_ENTITY: {
+    statusCode: 'UNPROCESSABLE_ENTITY',
+    message: 'Invalid data in request body',
+    cause: '',
+  },
+  RECORD_NOT_FOUND: {
+    statusCode: 'RECORD_NOT_FOUND',
+    message: 'Record not found',
+    cause: '',
+  },
+  UNIQUE_VIOLATION: {
+    statusCode: 'UNIQUE_VIOLATION',
+    message: 'Unique key violation',
+    cause: '',
+  },
+  BAD_REQUEST: {
+    statusCode: 'BAD_REQUEST',
+    message: 'Invalid request params or query',
+    cause: '',
+  },
+  ENV_VALIDATION_ERROR: {
+    statusCode: 'ENV_VALIDATION_ERROR',
+    message: 'Invalid environment variable',
+    cause: '',
+  },
+  UNCONFIRMED_EMAIL: {
+    statusCode: 'UNCONFIRMED_EMAIL',
+    message: 'The email address is unconfirmed',
+    cause: '',
+  },
+  SERVICE_UNAVAILABLE: {
+    statusCode: 'SERVICE_UNAVAILABLE',
+    message: 'External service is unavailable',
+    cause: '',
+  },
+  TO_MANY_REQUESTS: {
+    statusCode: 'TO_MANY_REQUESTS',
+    message: 'To many requests',
+    cause: '',
+  },
+  INVALID_RESPONSE: {
+    statusCode: 'INVALID_RESPONSE',
+    message: 'Response validation error. The violation of the Method contract',
+    cause: '',
+  },
+  TIMEOUT_EXPIRED: {
+    statusCode: 'TIMEOUT_EXPIRED',
+    message: 'Request timed out. The Process terminated by server',
+    cause: '',
+  },
+  INVALID_CREDENTIALS: {
+    statusCode: 'INVALID_CREDENTIALS',
+    message: 'Internal credentials',
+    cause: '',
+  },
 };
 
 export const INTERNAL_ERROR_TO_HTTP = {
-  [INTERNAL_ERROR_CODES.INTERNAL_SERVER_ERROR]: {
+  [INTERNAL_ERRORS.INTERNAL_SERVER_ERROR.statusCode]: {
     error: true,
     statusCode: 500,
     message: 'Internal server error',
   },
-  [INTERNAL_ERROR_CODES.UNAUTHORIZED]: {
+  [INTERNAL_ERRORS.UNAUTHORIZED.statusCode]: {
     error: true,
     statusCode: 401,
     message: 'Unauthorized',
   },
-  [INTERNAL_ERROR_CODES.FORBIDDEN]: {
+  [INTERNAL_ERRORS.FORBIDDEN.statusCode]: {
     error: true,
     statusCode: 403,
     message: 'Access denied',
   },
-  [INTERNAL_ERROR_CODES.INVALID_DATA]: {
+  [INTERNAL_ERRORS.UNPROCESSABLE_ENTITY.statusCode]: {
     error: true,
     statusCode: 422,
-    message: 'Invalid data',
+    message: 'Invalid data in request body',
   },
-  [INTERNAL_ERROR_CODES.RECORD_NOT_FOUND]: {
+  [INTERNAL_ERRORS.RECORD_NOT_FOUND.statusCode]: {
     error: true,
     statusCode: 401,
     message: 'Not found',
   },
-  [INTERNAL_ERROR_CODES.UNIQUE_VIOLATION]: {
+  [INTERNAL_ERRORS.UNIQUE_VIOLATION.statusCode]: {
     error: true,
     statusCode: 422,
     message: 'Unique key violation',
   },
-  [INTERNAL_ERROR_CODES.BAD_REQUEST]: {
+  [INTERNAL_ERRORS.BAD_REQUEST.statusCode]: {
     error: true,
     statusCode: 400,
     message: 'Bad Request',
   },
-  [INTERNAL_ERROR_CODES.INVALID_CREDENTIALS]: {
+  [INTERNAL_ERRORS.INVALID_CREDENTIALS.statusCode]: {
     error: true,
     statusCode: 401,
     message: 'Authorization failed',
   },
-  [INTERNAL_ERROR_CODES.ENV_VALIDATION_ERROR]: {
+  [INTERNAL_ERRORS.ENV_VALIDATION_ERROR.statusCode]: {
     error: true,
     statusCode: 500,
     message: 'Internal server error',
   },
-  [INTERNAL_ERROR_CODES.UNCONFIRMED_EMAIL]: {
+  [INTERNAL_ERRORS.UNCONFIRMED_EMAIL.statusCode]: {
     error: true,
     statusCode: 401,
     message: 'Unconfirmed email',
   },
-  [INTERNAL_ERROR_CODES.SERVICE_UNAVAILABLE]: {
+  [INTERNAL_ERRORS.SERVICE_UNAVAILABLE.statusCode]: {
     error: true,
     statusCode: 503,
     message: 'Service is unavailable now',
   },
-  [INTERNAL_ERROR_CODES.TO_MANY_REQUESTS]: {
+  [INTERNAL_ERRORS.TO_MANY_REQUESTS.statusCode]: {
     error: true,
     statusCode: 429,
     message: 'To many requests',
   },
-  [INTERNAL_ERROR_CODES.INVALID_RESPONSE]: {
+  [INTERNAL_ERRORS.INVALID_RESPONSE.statusCode]: {
     error: true,
     statusCode: 500,
     message: 'Internal server error',
   },
-  [INTERNAL_ERROR_CODES.TIMEOUT_EXPIRED]: {
+  [INTERNAL_ERRORS.TIMEOUT_EXPIRED.statusCode]: {
     error: true,
     statusCode: 408,
-    message: `Request Timeout`,
+    message: 'Request timed out. The Process terminated by server',
   },
 };
