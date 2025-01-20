@@ -11,8 +11,18 @@ export default {
   },
 
   async getEmission(args) {
-    const fetchingQueue = Provider.getService(TaskQueue, [1, 10, 1000]);
-    const processingQueue = Provider.getService(TaskQueue, [100, 100, 1000]);
+    const fetchingQueueArgs = [
+      process.env.FETCH_QUEUE_CONCURRENCY,
+      process.env.FETCH_QUEUE_LIMIT,
+      process.env.FETCH_QUEUE_INTERVAL,
+    ];
+    const processingQueueArgs = [
+      process.env.PROCESS_QUEUE_CONCURRENCY,
+      process.env.PROCESS_QUEUE_LIMIT,
+      process.env.PROCESS_QUEUE_INTERVAL,
+    ];
+    const fetchingQueue = Provider.getService(TaskQueue, fetchingQueueArgs);
+    const processingQueue = Provider.getService(TaskQueue, processingQueueArgs);
 
     return Promise.race([
       setCustomTimeout(fetchingQueue, processingQueue),
@@ -28,7 +38,6 @@ async function getEmissionData(args, fetchingQueue, processingQueue) {
   let lastProcessedIndex = -1;
 
   let countries = await footprintApi.getCountries();
-  countries = countries.slice(0, 20);
 
   const fetchingTasks = countries.map((country) => {
     return {

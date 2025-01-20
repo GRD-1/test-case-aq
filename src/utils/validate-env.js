@@ -6,6 +6,12 @@ const EnvSchema = Joi.object({
   FOOTPRINT_RATE_LIMIT: Joi.number().default(100),
   APP_PORT: Joi.number().port().default(5000),
   GLOBAL_TIMEOUT: Joi.number().default(180000),
+  FETCH_QUEUE_CONCURRENCY: Joi.number().default(1),
+  FETCH_QUEUE_LIMIT: Joi.number().default(10),
+  FETCH_QUEUE_INTERVAL: Joi.number().default(1000),
+  PROCESS_QUEUE_CONCURRENCY: Joi.number().default(100),
+  PROCESS_QUEUE_LIMIT: Joi.number().default(100),
+  PROCESS_QUEUE_INTERVAL: Joi.number().default(1000),
 }).unknown();
 
 export function validateEnvVars() {
