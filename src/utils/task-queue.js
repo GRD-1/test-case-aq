@@ -28,8 +28,6 @@ class TaskQueue {
         if (count >= this.limit) {
           await this.wait();
           this.limit = count - this.failedTasks.length;
-          tasks.push(...this.failedTasks);
-          this.failedTasks = [];
           count = 0;
         }
         void this.queue.push(task);
@@ -48,6 +46,13 @@ class TaskQueue {
 
   getResults() {
     return this.results;
+  }
+
+  rerunFailed() {
+    if (this.failedTasks.length > 0) {
+      void this.addTasks(this.failedTasks);
+      this.failedTasks = [];
+    }
   }
 }
 

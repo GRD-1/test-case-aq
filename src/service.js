@@ -14,9 +14,7 @@ export default {
     let lastProcessedIndex = -1;
 
     let countries = await footprintApi.getCountries();
-    const fakeCountryIndex = countries.findLastIndex((item) => item.countryName === 'All');
-    countries.splice(fakeCountryIndex, 1);
-    countries = countries.slice(0, 10);
+    countries = countries.slice(0, 20);
 
     const fetchingTasks = countries.map((country) => {
       return {
@@ -35,6 +33,13 @@ export default {
       const checkQueue = setInterval(() => {
         fetchingResults = fetchingQueue.getResults();
         processingResults = processingQueue.getResults();
+
+        if (fetchingQueue.queue.idle()) {
+          fetchingQueue.rerunFailed();
+        }
+        if (processingQueue.queue.idle()) {
+          processingQueue.rerunFailed();
+        }
 
         if (lastProcessedIndex < fetchingResults.length - 1) {
           processData(fetchingResults, lastProcessedIndex, countries);
