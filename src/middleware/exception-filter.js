@@ -7,10 +7,11 @@ const exceptionFilter = (err, req, res, next) => {
 
   if (err instanceof InternalError) {
     const httpError = INTERNAL_ERROR_TO_HTTP[err.statusCode];
-    const isBadRequest = err.statusCode === INTERNAL_ERROR_CODES.BAD_REQUEST;
+    const isBadReq = err.statusCode === INTERNAL_ERROR_CODES.BAD_REQUEST;
+    const isTimeout = err.statusCode === INTERNAL_ERROR_CODES.TIMEOUT_EXPIRED;
 
     statusCode = httpError.statusCode;
-    message = isBadRequest ? `${httpError.message}: ${err.message}` : httpError.message;
+    message = isBadReq || isTimeout ? `${httpError.message}: ${err.message}` : httpError.message;
   }
 
   res.status(statusCode).json({

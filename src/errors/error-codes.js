@@ -11,6 +11,8 @@ export const INTERNAL_ERROR_CODES = {
   UNCONFIRMED_EMAIL: 'UNCONFIRMED_EMAIL',
   SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
   TO_MANY_REQUESTS: 'TO_MANY_REQUESTS',
+  INVALID_RESPONSE: 'INVALID_RESPONSE',
+  TIMEOUT_EXPIRED: 'TIMEOUT_EXPIRED',
 };
 
 export const INTERNAL_ERROR_TO_HTTP = {
@@ -57,7 +59,7 @@ export const INTERNAL_ERROR_TO_HTTP = {
   [INTERNAL_ERROR_CODES.ENV_VALIDATION_ERROR]: {
     error: true,
     statusCode: 500,
-    message: 'Env validation failed',
+    message: 'Internal server error',
   },
   [INTERNAL_ERROR_CODES.UNCONFIRMED_EMAIL]: {
     error: true,
@@ -73,5 +75,15 @@ export const INTERNAL_ERROR_TO_HTTP = {
     error: true,
     statusCode: 429,
     message: 'To many requests',
+  },
+  [INTERNAL_ERROR_CODES.INVALID_RESPONSE]: {
+    error: true,
+    statusCode: 500,
+    message: 'Internal server error',
+  },
+  [INTERNAL_ERROR_CODES.TIMEOUT_EXPIRED]: {
+    error: true,
+    statusCode: 408,
+    message: `Request Timeout`,
   },
 };

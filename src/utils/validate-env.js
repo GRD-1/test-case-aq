@@ -5,6 +5,7 @@ const EnvSchema = Joi.object({
   FOOTPRINT_USERNAME: Joi.string().required(),
   FOOTPRINT_RATE_LIMIT: Joi.number().default(100),
   APP_PORT: Joi.number().port().default(5000),
+  GLOBAL_TIMEOUT: Joi.number().default(180000),
 }).unknown();
 
 export function validateEnvVars() {
