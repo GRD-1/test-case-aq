@@ -1,6 +1,8 @@
 import footprintApi from './footprintApi';
 import getHome from './home';
 import { fetchingQueue, processingQueue } from './utils/task-queue.js';
+import { InternalError } from './errors/errors';
+import { INTERNAL_ERROR_CODES } from './errors/error-codes';
 
 export default {
   async getHomePage() {
@@ -8,57 +10,61 @@ export default {
   },
 
   async getEmission(args) {
-    const { year } = args;
-    let fetchingResults = [];
-    let processingResults = [];
-    let lastProcessedIndex = -1;
-
-    let countries = await footprintApi.getCountries();
-    countries = countries.slice(0, 20);
-
-    const fetchingTasks = countries.map((country) => {
-      return {
-        id: country.countryCode,
-        execute: async () => {
-          const countryEmission = await footprintApi.getDataForCountry(country.countryCode);
-
-          return countryEmission.find((item) => item.year === year);
-        },
-      };
-    });
-
-    await fetchingQueue.addTasks(fetchingTasks);
-
-    await new Promise((resolve) => {
-      const checkQueue = setInterval(() => {
-        fetchingResults = fetchingQueue.getResults();
-        processingResults = processingQueue.getResults();
-
-        if (fetchingQueue.queue.idle()) {
-          fetchingQueue.rerunFailed();
-        }
-        if (processingQueue.queue.idle()) {
-          processingQueue.rerunFailed();
-        }
-
-        if (lastProcessedIndex < fetchingResults.length - 1) {
-          processData(fetchingResults, lastProcessedIndex, countries);
-          lastProcessedIndex = fetchingResults.length - 1;
-        }
-
-        const isFetchingCompleted = fetchingResults.length === fetchingTasks.length;
-        const isProcessingCompleted = processingResults.length === fetchingTasks.length;
-
-        if (isProcessingCompleted && isFetchingCompleted) {
-          clearInterval(checkQueue);
-          resolve();
-        }
-      }, 100);
-    });
-
-    return processingResults;
+    return Promise.race([setCustomTimeout(fetchingQueue, processingQueue), getEmissionData(args)]);
   },
 };
+
+async function getEmissionData(args) {
+  const { year } = args;
+  let fetchingResults = [];
+  let processingResults = [];
+  let lastProcessedIndex = -1;
+
+  let countries = await footprintApi.getCountries();
+  // countries = countries.slice(0, 20);
+
+  const fetchingTasks = countries.map((country) => {
+    return {
+      id: country.countryCode,
+      execute: async () => {
+        const countryEmission = await footprintApi.getDataForCountry(country.countryCode);
+
+        return countryEmission.find((item) => item.year === year);
+      },
+    };
+  });
+
+  await fetchingQueue.addTasks(fetchingTasks);
+
+  await new Promise((resolve) => {
+    const checkQueue = setInterval(() => {
+      fetchingResults = fetchingQueue.getResults();
+      processingResults = processingQueue.getResults();
+
+      if (fetchingQueue.queue.idle()) {
+        fetchingQueue.rerunFailed();
+      }
+      if (processingQueue.queue.idle()) {
+        processingQueue.rerunFailed();
+      }
+
+      if (lastProcessedIndex < fetchingResults.length - 1) {
+        processData(fetchingResults, lastProcessedIndex, countries);
+        lastProcessedIndex = fetchingResults.length - 1;
+      }
+
+      const isFetchingCompleted = fetchingResults.length === fetchingTasks.length;
+      const isProcessingCompleted = processingResults.length === fetchingTasks.length;
+
+      if (isProcessingCompleted && isFetchingCompleted) {
+        clearInterval(checkQueue);
+        resolve();
+      }
+    }, 100);
+  });
+
+  return processingResults;
+}
 
 async function processData(fetchingResults, lastProcessedIndex, countries) {
   const processingResults = processingQueue.getResults();
@@ -84,4 +90,21 @@ async function processData(fetchingResults, lastProcessedIndex, countries) {
 
     await processingQueue.addTasks(processingTasks);
   }
+}
+
+async function setCustomTimeout(fetchingQueue, processingQueue) {
+  const timeoutMs = process.env.GLOBAL_TIMEOUT;
+
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      fetchingQueue.queue.kill();
+      processingQueue.queue.kill();
+      reject(
+        new InternalError(
+          `Request timed out after ${timeoutMs} ms`,
+          INTERNAL_ERROR_CODES.TIMEOUT_EXPIRED,
+        ),
+      );
+    }, timeoutMs);
+  });
 }

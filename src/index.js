@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import router from './router';
 import exceptionFilter from './middleware/exception-filter';
 import { validateEnvVars } from './utils/validate-env';
-import globalTimeout from './middleware/global-timeout';
 
 dotenv.config();
 validateEnvVars();
@@ -13,7 +12,6 @@ const app = express();
 const urlencodedParser = express.urlencoded({ extended: false });
 
 app.use(bodyParser.json());
-app.use(globalTimeout(process.env.GLOBAL_TIMEOUT));
 app.use('/', urlencodedParser, router);
 app.use(exceptionFilter);
 
