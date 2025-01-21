@@ -1,9 +1,9 @@
-import footprintApi from './footprintApi';
-import getHome from './home';
-import { InternalError } from './errors/errors';
-import { INTERNAL_ERRORS } from './errors/error-codes';
-import Provider from './utils/provider';
-import TaskQueue from './utils/task-queue';
+import footprintApi from './footprintApi.js';
+import getHome from './home.js';
+import { InternalError } from './errors/errors.js';
+import { INTERNAL_ERRORS } from './errors/error-codes.js';
+import Provider from './utils/provider.js';
+import TaskQueue from './utils/task-queue.js';
 
 export default {
   async getHomePage() {
@@ -38,6 +38,8 @@ async function getEmissionData(args, fetchingQueue, processingQueue) {
   let lastProcessedIndex = -1;
 
   let countries = await footprintApi.getCountries();
+  countries = countries.slice(0, 5);
+  console.log('In application file:', footprintApi);
 
   const fetchingTasks = countries.map((country) => {
     return {

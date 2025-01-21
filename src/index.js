@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import router from './router';
-import exceptionFilter from './middleware/exception-filter';
-import { validateEnvVars } from './utils/validate-env';
+import router from './router.js';
+import exceptionFilter from './middleware/exception-filter.js';
+import { validateEnvVars } from './utils/validate-env.js';
 
 dotenv.config();
 validateEnvVars();

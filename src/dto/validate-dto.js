@@ -1,5 +1,5 @@
-import { INTERNAL_ERRORS } from '../errors/error-codes';
-import { InternalError } from '../errors/errors';
+import { INTERNAL_ERRORS } from '../errors/error-codes.js';
+import { InternalError } from '../errors/errors.js';
 
 export default function validateDTO(schema, dto) {
   const { value, error } = schema.validate(dto);

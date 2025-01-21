@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { InternalError } from '../errors/errors';
-import { INTERNAL_ERRORS } from '../errors/error-codes';
+import { InternalError } from '../errors/errors.js';
+import { INTERNAL_ERRORS } from '../errors/error-codes.js';
 
 const schema = Joi.object().pattern(
   Joi.string(),

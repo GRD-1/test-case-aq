@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { InternalError } from './errors/errors';
-import { INTERNAL_ERRORS } from './errors/error-codes';
+import { InternalError } from './errors/errors.js';
+import { INTERNAL_ERRORS } from './errors/error-codes.js';
 
 export default {
   async get(apiUrl) {
+    console.log('footprint.get args: ', apiUrl);
     try {
       return await axios.get(apiUrl, {
         auth: {

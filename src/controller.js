@@ -1,7 +1,7 @@
-import Service from './service';
-import GetEmissionSchema from './dto/get-emission.schema';
-import GetEmissionRespTransform from './dto/get-emission-response.schema';
-import validateDTO from './dto/validate-dto';
+import Service from './service.js';
+import GetEmissionSchema from './dto/get-emission.schema.js';
+import GetEmissionRespTransform from './dto/get-emission-response.schema.js';
+import validateDTO from './dto/validate-dto.js';
 
 export default {
   async goHome(req, res, next) {

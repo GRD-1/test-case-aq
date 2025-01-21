@@ -1,4 +1,4 @@
-import footprintApi from './footprintApi';
+import footprintApi from './footprintApi.js';
 
 export default async function getHome() {
   const countries = await footprintApi.getCountries();

@@ -1,5 +1,5 @@
-import { INTERNAL_ERROR_TO_HTTP, INTERNAL_ERRORS } from '../errors/error-codes';
-import { InternalError } from '../errors/errors';
+import { INTERNAL_ERROR_TO_HTTP, INTERNAL_ERRORS } from '../errors/error-codes.js';
+import { InternalError } from '../errors/errors.js';
 
 const exceptionFilter = (err, req, res, next) => {
   console.log(err);
