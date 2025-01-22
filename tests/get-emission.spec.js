@@ -9,8 +9,9 @@ import {
   getCountryDataURL,
   COUNTRY_DATA,
   CORRECT_RESPONSE,
+  YEAR,
 } from './fixtures/correct-data.js';
-import footprintApi from '../src/footprintApi.js';
+import { application, footprintApi } from './fixtures/get-application.js';
 
 describe('Test suite "get-emission"', function () {
   this.timeout(20000);
@@ -23,13 +24,15 @@ describe('Test suite "get-emission"', function () {
 
     COUNTRIES.forEach((country, i) => {
       const url = getCountryDataURL(country.countryCode);
-      console.log('Mocking URL:', url);
-      getStub.withArgs(url).resolves({ data: COUNTRY_DATA[i] });
+      getStub.withArgs(url).resolves({ data: [COUNTRY_DATA[i]] });
     });
   });
 
-  after(() => {
+  after((done) => {
     sinon.restore();
+    application.close(() => {
+      done();
+    });
   });
 
   it('Should return 404 for invalid path', async () => {
@@ -60,16 +63,11 @@ describe('Test suite "get-emission"', function () {
   });
 
   it('Should return the correct data', async () => {
-    const request = `${API_URL}/1963`;
+    const request = `${API_URL}/${YEAR}`;
 
     const response = await axios.get(request);
 
-    console.log('In test file:', footprintApi);
-    console.log('Response Data:', response.data);
-    // expect(response?.status).to.equal(200);
-    // expect(response?.data).to.deep.equal(CORRECT_RESPONSE);
-
-    console.log('getStub.callCount:', getStub.callCount);
-    expect(2).to.deep.equal(2);
+    expect(response?.status).to.equal(200);
+    expect(response?.data).to.deep.equal(CORRECT_RESPONSE);
   });
 });
