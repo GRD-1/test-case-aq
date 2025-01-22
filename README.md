@@ -31,7 +31,8 @@ additional requirements:
     <div>
           <div style="display: flex; flex-wrap: wrap; height: 300px;">
             <div style="width: 40%; height: fit-content;"><a href="https://nodejs.org/en/about" target="_blank"><img src="https://img.shields.io/badge/Node.js-v20.14.0-blue?style=for-the-badge&logo=nodedotjs" alt="Node.js Version" /></a></div>
-            <div style="width: 40%; height: fit-content;"><a href="https://babeljs.io/" target="_blank"><img src="https://img.shields.io/badge/@babel/core-v7.26.0-blue?style=for-the-badge&logo=babel" alt="Babel Version" /></a></div>
+            <div style="width: 40%; height: fit-content;"><a href="https://expressjs.com/" target="_blank"><img src="https://img.shields.io/badge/@babel/core-v7.26.0-blue?style=for-the-badge&logo=babel" alt="Babel Version" /></a></div>
+            <div style="width: 40%; height: fit-content;"><a href="https://babeljs.io/" target="_blank"><img src="https://img.shields.io/badge/express-v4.21.2-blue?style=for-the-badge&logo=express" alt="Express Version" /></a></div>
             <div style="width: 40%; height: fit-content;"><a href="https://www.npmjs.com/package/joi" target="_blank"><img src="https://img.shields.io/badge/Joi-v17.13.3-blue?style=for-the-badge" alt="Joi Version" /></a></div>
             <div style="width: 40%; height: fit-content;"><a href="https://ecma-international.org/" target="_blank"><img src="https://img.shields.io/badge/JavaScript-ECMA412-blue?style=for-the-badge&logo=javascript" alt="JavaScript Version" /></a></div>
             <div style="width: 40%; height: fit-content;"><a href="https://www.npmjs.com/package/fastq" target="_blank"><img src="https://img.shields.io/badge/fastq-v1.18.0-blue?style=for-the-badge" alt="Fastq Version" /></a></div>
