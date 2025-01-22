@@ -4,13 +4,15 @@
   "description": "Altruistiq backend assessment",
   "main": "src/index.js",
   "type": "module",
+  "author": "GRD",
+  "engines": {
+    "node": ">=20.18.1"
+  },
   "scripts": {
     "init": "node ./scripts/generateData.js",
     "start": "nodemon src/index --exec \"node -r @babel/register\"",
     "test": "mocha tests/*.spec.js"
   },
-  "author": "Satya van Heummen",
-  "license": "MIT",
   "dependencies": {
     "axios": "^1.7.2",
     "body-parser": "^1.19.2",

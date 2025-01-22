@@ -13,7 +13,7 @@ additional requirements:
 
 <br>
 <p style="display: block; width: 100%; text-align:left;">
-  <a href="https://nodejs.org/en/about" target="_blank"><img src="https://img.shields.io/badge/Node.js-v20.14.0-blue?logo=nodedotjs" alt="Node.js Version" /></a>
+  <a href="https://nodejs.org/en/about" target="_blank"><img src="https://img.shields.io/badge/Node.js-v20.18.1-blue?logo=nodedotjs" alt="Node.js Version" /></a>
   <a href="https://ecma-international.org/" target="_blank"><img src="https://img.shields.io/badge/JavaScript-ECMA412-blue?logo=javascript" alt="JavaScript Version" /></a>
   <a href="" target="_blank"><img src="https://img.shields.io/badge/covarage-100%25-%2300c642?style=flat" alt="Coverage" /></a>
   <a href="" rel="nofollow"><img src="https://img.shields.io/badge/istall_size-140%20KB-%23ebdb32?style=flat" alt="install size"></a>
